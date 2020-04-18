@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kedacom.chartroom.mapper.UserMapper" >
+  
+  <!-- 配置resultMap 返回值类型-->
+   <resultMap id="resultSet" type="com.kedacom.chartroom.domain.User" >        
+        <id column="id" property="id" />
+        <result column="nickname" property="nickname" />
+        <result column="password" property="password" />
+        <result column="state" property="state" />
+        <result column="sign" property="sign" />
+    </resultMap>
+  
+  <!-- 根据用户名查询用户是否存在 -->
+  <select id="findByName" resultType="User">
+    select *  from user where nickname=#{nickname} and sign=0
+  </select>
+  
+  <!-- 添加用户注册信息 -->
+  <insert id="insert" parameterType="com.kedacom.chartroom.domain.User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    INSERT INTO user (
+        nickname,
+        password,
+        state,
+        sign
+    )
+    VALUES
+        (
+            #{nickname},
+            #{password},
+            #{state},
+            #{sign}
+        )
+  </insert>
+  
+  <!-- 用户登录验证 -->
+  <select id="login" parameterType="com.kedacom.chartroom.domain.User" resultType="Integer">
+    select id from user where nickname=#{nickname} and password=#{password}
+  </select>
+  
+  <!-- 更新用户状态 -->
+  <update id="modifyStateById" parameterType="com.kedacom.chartroom.domain.User">
+    UPDATE user
+        SET     
+         state = #{state}
+         
+        WHERE
+            (id = #{id});
+  </update>
+  
+  <!-- 获取所有在线登录用户 -->
+  <select id="findAllOnlineUser" parameterType="com.kedacom.chartroom.domain.User" resultMap="resultSet" >   <!-- 返回的是一个list集合 -->
+    select *  from user where id !=#{id} and state=1 and sign=0
+  </select>
+  
+  <!-- 删除用户  这里并不是真正的删除用户  而是通过设置sign=1  标记该用户为删除用户 -->
+  <!-- 更新用户状态 -->
+  <update id="deleteUserById" parameterType="java.lang.Integer">
+    UPDATE user
+        SET     
+         sign = 1
+         
+        WHERE
+            (id = #{id});
+  </update>
+</mapper>
+
+
+
+
+
+
+

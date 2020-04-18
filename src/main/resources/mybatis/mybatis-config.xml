@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+	   <!-- 开启驼峰匹配     如果数据库中的字段名与java中的属性名不一致，才开启，否则不需要开启   默认是false-->
+	   <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    
+    <!-- 批量别名定义      已经在applicationContext-mybatis.xml文件中配置了 -->
+    <!-- <typeAliases>        
+        <package name="com.kedacom.chartroom.domain"/>
+    </typeAliases> -->
+
+
+<!-- 配置分页插件 -->
+<plugins>
+   <!-- 配置通用Mapper -->
+   <plugin interceptor="com.github.abel533.mapperhelper.MapperInterceptor">
+   		<!-- 主键自增回写方法，默认值为Mysql -->
+   		<property name="IDENTITY" value="MYSQL"/>
+   		<!-- 配置通用Mapper实现 -->
+   		<property name="mappers" value="com.github.abel533.mapper.Mapper"/>
+   </plugin>
+</plugins>
+</configuration>

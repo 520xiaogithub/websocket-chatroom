@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<display-name>chatroom</display-name>
+	
+<!-- 加载外部xml文件 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring/applicationContext*.xml</param-value>
+	</context-param>
+	<!--Spring的ApplicationContext 载入 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+<!-- WebSocket的文件传输大小的定义   最大传输2M数据-->
+    <!-- <context-param>
+	    <param-name>org.apache.tomcat.websocket.textBufferSize</param-name>
+	    <param-value>16777216</param-value>
+    </context-param> -->	
+
+<!-- 权限拦截器 -->
+	<filter>
+		<filter-name>AuthFilter</filter-name>
+		<filter-class>com.kedacom.chartroom.web.controller.AuthFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<url-pattern>/chat/</url-pattern>
+	</filter-mapping>	
+	
+<!-- 编码过滤器 -->	
+	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+<!-- 将post请求转化为delete或者是put，要用_method指定真正的请求方法 -->
+	<filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+<!-- 解决put请求无法提交From的问题 -->
+	<filter>
+		<filter-name>HttpMehtodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HttpMehtodFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>	
+	
+	<!-- 拦截验证码 -->
+	<servlet>
+	   <servlet-name>CheckImgServlet</servlet-name>
+	   <servlet-class>com.kedacom.chartroom.web.controller.CheckImgServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	   <servlet-name>CheckImgServlet</servlet-name>
+	   <url-pattern>/img</url-pattern>  <!-- 在标签中   提交的时候拦截 -->
+	</servlet-mapping>
+	
+	<!-- spring mvc前端控制器 -->
+	<servlet>
+		<servlet-name>SpringMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SpringMVC</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>	
+	
+	<!-- 
+		拦截查询所有在线用户请求
+	<servlet>
+	   <servlet-name>FindAllOnlineUser</servlet-name>
+	   <servlet-class>com.kedacom.chartroom.web.controller.FindAllOnlineUser</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	   <servlet-name>FindAllOnlineUser</servlet-name>
+	   <url-pattern>/findAllOnlineUser</url-pattern>  在标签中   提交的时候拦截
+	</servlet-mapping> -->
+		
+	<!-- 防 XSS -->
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

@@ -1,0 +1,7 @@
+{"total":3,"rows":
+	[
+		{"id":"1","nickname":"aaa"},
+		{"id":"2","nickname":"bbb"},
+		{"id":"3","nickname":"ccc"}
+	]
+}

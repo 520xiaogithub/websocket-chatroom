@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.kedacom.chartroom.mapper.MessageMapper" >
+  
+
+  <!-- 添加用户注册信息 -->
+  <insert id="insert" parameterType="com.kedacom.chartroom.domain.Message" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    INSERT INTO message (
+        typeName,
+        fromID,
+        fromName,
+        toID,
+        text,
+        date,
+        fileURL
+    )
+    VALUES
+        (
+            #{typeName},
+            #{fromID},
+            #{fromName},
+            #{toID},
+            #{text},
+            #{date},
+            #{fileURL}
+        )
+  </insert>
+  
+  <!-- 更新Message文件上传路径信息 -->
+  <update id="updateURL" parameterType="com.kedacom.chartroom.domain.Message">
+    UPDATE message
+        SET     
+         fileURL = #{fileURL}
+         
+        WHERE
+            (id = #{id});
+  </update>
+</mapper>
